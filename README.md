@@ -10,45 +10,24 @@ A simple CLI tool to check username/ID availability across multiple platforms.
 - Direct links to creation pages when username is available
 - Built with TypeScript and Node.js native fetch API
 
-## Installation
-
-```bash
-npm install
-npm run build
-```
-
 ## Usage
 
 ### Basic Usage
 
 Check a single username:
 ```bash
-node dist/index.js <username>
+npx @lmk123/namechecker@latest <username>
 ```
 
 Check multiple usernames at once:
 ```bash
-node dist/index.js <username1> <username2> <username3>
+npx @lmk123/namechecker@latest <username1> <username2> <username3>
 ```
 
 Examples:
 ```bash
-node dist/index.js myawesomeorg
-node dist/index.js myorg testname coolproject
-```
-
-### Global Installation
-
-To use the `namechecker` command globally:
-
-```bash
-npm link
-```
-
-Then you can run:
-```bash
-namechecker myawesomeorg
-namechecker myorg testname coolproject
+npx @lmk123/namechecker@latest myawesomeorg
+npx @lmk123/namechecker@latest myorg testname coolproject
 ```
 
 ## Example Output
@@ -86,10 +65,6 @@ Checking availability for: testname
 Currently supports checking availability on:
 - **GitHub**: Checks if `github.com/<username>` exists
 - **npm org**: Checks if `npmjs.com/org/<username>` exists
-
-## How It Works
-
-The tool makes HTTP HEAD requests to each platform's URL. A 404 response indicates the username is available, while any other status code means it's taken or there was an error.
 
 ## Adding More Platforms
 

@@ -3,12 +3,14 @@
   "version": "1.0.0",
   "description": "Check if a username/ID is available on GitHub and npm org",
   "main": "dist/index.js",
+  "type": "module",
   "bin": {
     "namechecker": "./dist/index.js"
   },
   "scripts": {
     "build": "tsc",
     "dev": "tsc && node dist/index.js",
+    "prepublishOnly": "npm run build",
     "u": "npx npm-check-updates@latest -u"
   },
   "dependencies": {},
@@ -16,6 +18,7 @@
     "@types/node": "^25.0.2",
     "typescript": "^5.9.3"
   },
+  "files": ["dist"],
   "engines": {
     "node": ">=18.0.0"
   }
