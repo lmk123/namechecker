@@ -37,16 +37,49 @@ const platforms: PlatformChecker[] = [
     url: (id: string) => `https://www.npmjs.com/org/${id}`,
     createUrl: 'https://www.npmjs.com/org/create',
     checkAvailable: async (id: string) => {
-      // npm blocks HEAD requests to org pages, so we use the registry search API
-      // to check if any packages exist under this scope
-      const searchUrl = `https://registry.npmjs.org/-/v1/search?text=@${id}/&size=1`;
+      // Step 1: Check if there are any packages under this scope using search API
+      const searchUrl = `https://registry.npmjs.org/-/v1/search?text=scope:${id}&size=250`;
       try {
-        const response = await fetch(searchUrl);
-        const data = await response.json();
-        // If total is 0, no packages exist under this scope, so it's available
-        return data.total === 0;
+        const searchResponse = await fetch(searchUrl);
+        const searchData = await searchResponse.json();
+
+        // Filter results to only include packages that actually belong to this exact scope
+        const exactMatches = searchData.objects?.filter((obj: any) => {
+          const packageName = obj.package?.name || '';
+          // Check if package name starts with @id/ (exact scope match)
+          return packageName.startsWith(`@${id}/`);
+        }) || [];
+
+        // If packages exist under this scope, it's taken (either by user or org)
+        if (exactMatches.length > 0) {
+          return false;
+        }
+
+        // Step 2: No packages found, check if an empty org exists
+        // Use browser-like headers to avoid anti-scraping detection
+        const orgUrl = `https://www.npmjs.com/org/${id}`;
+        const orgResponse = await fetch(orgUrl, {
+          method: 'GET',
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.9',
+          },
+          redirect: 'manual',
+        });
+
+        // 404 means no org exists (available)
+        // 200 means org exists but has no packages (taken)
+        // 403 means rate limited/blocked - if no packages found in search, likely available
+        if (orgResponse.status === 403) {
+          return true;
+        }
+
+        return orgResponse.status === 404;
+
       } catch (error) {
         console.error(`Error checking npm org ${id}:`, error);
+        // On error, assume taken to be safe
         return false;
       }
     },
