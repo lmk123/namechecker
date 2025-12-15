@@ -2,11 +2,22 @@
   "name": "@lmk123/namechecker",
   "version": "1.0.1",
   "description": "Check if a username/ID is available on GitHub and npm org",
+  "author": "lmk123",
+  "license": "MIT",
+  "homepage": "https://github.com/lmk123/namechecker#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lmk123/namechecker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lmk123/namechecker/issues"
+  },
   "main": "dist/index.js",
   "type": "module",
   "bin": {
     "namechecker": "./dist/index.js"
   },
+  "preferGlobal": true,
   "scripts": {
     "build": "tsc",
     "dev": "tsc && node dist/index.js",
@@ -19,6 +30,20 @@
     "typescript": "^5.9.3"
   },
   "files": ["dist"],
+  "keywords": [
+    "username",
+    "availability",
+    "check",
+    "github",
+    "npm",
+    "org",
+    "organization",
+    "cli",
+    "validation",
+    "registry",
+    "package-name",
+    "name-checker"
+  ],
   "engines": {
     "node": ">=18.0.0"
   }
