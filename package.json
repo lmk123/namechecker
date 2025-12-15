@@ -1,6 +1,6 @@
 {
   "name": "@lmk123/namechecker",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Check if a username/ID is available on GitHub and npm org",
   "author": "lmk123",
   "license": "MIT",
@@ -29,7 +29,9 @@
     "@types/node": "^25.0.2",
     "typescript": "^5.9.3"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "username",
     "availability",
@@ -41,7 +43,6 @@
     "cli",
     "validation",
     "registry",
-    "package-name",
     "name-checker"
   ],
   "engines": {
