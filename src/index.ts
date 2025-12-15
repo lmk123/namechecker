@@ -55,27 +55,20 @@ const platforms: PlatformChecker[] = [
           return false;
         }
 
-        // Step 2: No packages found, check if an empty org exists
-        // Use browser-like headers to avoid anti-scraping detection
-        const orgUrl = `https://www.npmjs.com/org/${id}`;
-        const orgResponse = await fetch(orgUrl, {
-          method: 'GET',
-          headers: {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Language': 'en-US,en;q=0.9',
-          },
-          redirect: 'manual',
-        });
+        // Step 2: No packages found, check if an empty org exists using registry API
+        // This API returns {"error":"Scope not found"} if org doesn't exist
+        // or {} / package list if org exists (even with no packages)
+        const orgApiUrl = `https://registry.npmjs.org/-/org/${id}/package`;
+        const orgResponse = await fetch(orgApiUrl);
+        const orgData = await orgResponse.json();
 
-        // 404 means no org exists (available)
-        // 200 means org exists but has no packages (taken)
-        // 403 means rate limited/blocked - if no packages found in search, likely available
-        if (orgResponse.status === 403) {
+        // If error is "Scope not found", the org is available
+        if (orgData.error === 'Scope not found') {
           return true;
         }
 
-        return orgResponse.status === 404;
+        // Otherwise (empty {} or package list), org exists and is taken
+        return false;
 
       } catch (error) {
         console.error(`Error checking npm org ${id}:`, error);
