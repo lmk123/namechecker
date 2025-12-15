@@ -1,6 +1,6 @@
 {
   "name": "@lmk123/namechecker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Check if a username/ID is available on GitHub and npm org",
   "main": "dist/index.js",
   "type": "module",
